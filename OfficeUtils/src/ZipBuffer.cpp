@@ -118,7 +118,7 @@ void CZipBuffer::open(BYTE* buffer, DWORD size)
 	m_sizeZip = size;
 
 	// Getting the paths in the archive
-	BUFFER_IO* buf = new BUFFER_IO;
+	BUFFER_IO* buf = new BUFFER_IO();
 	buf->buffer = m_zipFile;
 	buf->nSize  = m_sizeZip;
 	unzFile uf  = unzOpenHelp(buf);
@@ -164,7 +164,7 @@ std::vector<std::string> CZipBuffer::getPaths()
 // Saves the archive to the transferred memory, the received data must be freed
 void CZipBuffer::save(BYTE*& data, DWORD& length)
 {
-	BUFFER_IO* buf = new BUFFER_IO;
+	BUFFER_IO* buf = new BUFFER_IO();
 	buf->bGrow = 1;
 	buf->nCurrentPos = 0;
 	zipFile zip_file_handle = zipOpenHelp(buf);
@@ -209,7 +209,7 @@ void CZipBuffer::getFile(const std::string& sPath, BYTE*& data, DWORD& length)
 		return;
 	}
 
-	BUFFER_IO* buf = new BUFFER_IO;
+	BUFFER_IO* buf = new BUFFER_IO();
 	buf->buffer = m_zipFile;
 	buf->nSize  = m_sizeZip;
 	unzFile uf  = unzOpenHelp(buf);

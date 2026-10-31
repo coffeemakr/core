@@ -81,7 +81,7 @@ namespace ZLibZipUtils
 	void CunzFileWrapped::Open(BYTE* data, size_t len)
 	{
 		Close();
-		m_buffer = new BUFFER_IO;
+		m_buffer = new BUFFER_IO();
 		if ((data != NULL) && (len != 0))
 		{
 			m_buffer->buffer = data;
