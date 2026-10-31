@@ -21,9 +21,13 @@ endif()
 #   tempDirectory  = <binary dir>/../temp    (created at run time)
 # So the committed zip/ fixtures must be staged one level above the binary, and
 # that parent must be writable (it is, it lives under the build tree).
+# ioapibuf.c is compiled in directly: kernel is built with -fvisibility=hidden,
+# so fill_buffer_filefunc is not exported from it.
 add_core_gtest(
     NAME    officeutils_test
     SOURCES main.cpp
+            ioapibuf_test.cpp
+            ${CORE_ROOT_DIR}/OfficeUtils/src/ioapibuf.c
     LIBS    kernel UnicodeConverter
     GTEST_MAIN
     WORKING_DIRECTORY "$<TARGET_FILE_DIR:officeutils_test>"
@@ -32,6 +36,12 @@ add_core_gtest(
     # second-boundary race (CI observed tm_sec 17 vs 16) -- brittle, not a code
     # bug. Quarantine them so the other 8 OfficeUtils tests gate CI.
     GTEST_FILTER "-COfficeUtilsTest.time_file:COfficeUtilsTest.time_folder"
+)
+
+# ioapibuf.h includes zlib.h and minizip-ng's compat ioapi.h.
+target_include_directories(officeutils_test PRIVATE
+    ${ZLIBNG_INCLUDEDIR_ABS}
+    ${ZLIBNG_INCLUDEDIR_ABS}/minizip
 )
 
 # Stage the committed zip/ fixtures next to where the test expects them
